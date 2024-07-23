@@ -1,34 +1,27 @@
 import {motion} from 'framer-motion'
 import { useState, useEffect } from 'react'
+import { AppWrap, MotionWrap } from '../../wrapper';
+import { urlFor, client } from '../../client';
 import './About.scss'
 const About = () => {
 
-  const abouts = [
-    {   title: "Web Development",
-    description: "I am a web developer with a passion for creating beautiful and functional websites. I have experience with a variety of web technologies, including HTML, CSS, JavaScript, and React. I am always looking to learn new skills and improve my craft, and I am excited to work on new projects and challenges.",
-    imgUrl: ''
-     },
-    {   title: "Web Development",
-    description: "I am a web developer with a passion for creating beautiful and functional websites. I have experience with a variety of web technologies, including HTML, CSS, JavaScript, and React. I am always looking to learn new skills and improve my craft, and I am excited to work on new projects and challenges.",
-    imgUrl: ''
-     },
-    {   title: "Web Development",
-    description: "I am a web developer with a passion for creating beautiful and functional websites. I have experience with a variety of web technologies, including HTML, CSS, JavaScript, and React. I am always looking to learn new skills and improve my craft, and I am excited to work on new projects and challenges.",
-    imgUrl: ''
-     },
-    {   title: "Web Development",
-    description: "I am a web developer with a passion for creating beautiful and functional websites. I have experience with a variety of web technologies, including HTML, CSS, JavaScript, and React. I am always looking to learn new skills and improve my craft, and I am excited to work on new projects and challenges.",
-    imgUrl: ''
-     },
-  ]
+  const [abouts, setAbouts] = useState([]);
+
+  useEffect(() => {
+    const query = '*[_type == "abouts"]';
+    client.fetch(query)
+         .then((data) => {
+            setAbouts(data)
+         })
+  
+    
+  }, [])
+  console.log(abouts)
+  
   return (
-    <>
-     <h2 className='head-text'>I know that
-      <span>Good Design</span>
-      <br/>
-      and 
-      <span>Good Development</span>
-      </h2>
+  
+    <div>
+     <h2 className='head-text'>I am a <span>Good Designer</span><br/> and <span>Good Development</span></h2>
 
       <div className="app__profiles">
         {abouts.map((about, index) => (
@@ -39,13 +32,17 @@ const About = () => {
           className='app__profile-item'
           key={about.title + index}
           >
-            <img src={about.imgUrl} alt={about.title}/>
+            <img src={urlFor(about.imgUrl)} alt={about.title}/>
+            <h2 className='bold-text mt-5'>{about.title}</h2>
+            <p className='p-text mt-3'>{about.description}</p>
+
 
           </motion.div>
         ))}
         </div> 
-    </>
+    </div>
   )
 }
 
-export default About
+export default AppWrap(
+  MotionWrap(About, 'app__about'),'about', 'app__whitebg');
